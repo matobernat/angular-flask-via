@@ -1,5 +1,5 @@
 import connexion as connexion
-from flask import Flask, render_template, request, jsonify, make_response, Response
+from flask import Flask, render_template, request, jsonify, make_response, Response, url_for, Blueprint
 from flask_marshmallow import Marshmallow
 from flask_restx import Api, Resource
 import requests
@@ -7,42 +7,26 @@ import json
 from flask_sqlalchemy import SQLAlchemy
 import os.path
 
-
+from werkzeug.middleware.proxy_fix import ProxyFix
+from werkzeug.utils import redirect
 
 """Define Flask app"""
-flask_app = Flask(__name__)
+flask_app = Flask(__name__, static_folder='static', static_url_path="/static")
+
+flask_app.wsgi_app = ProxyFix(flask_app.wsgi_app)
 
 
-# basedir = os.path.abspath(os.path.dirname(__file__))
-# # Create the Connexion application instance
-# connex_app = connexion.App(__name__, specification_dir=basedir)
-#
-# # Get the underlying Flask app instance
-# app = connex_app.app
-#
-# flask_app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.sqlite3'
-# flask_app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-#
-# # Configure the SQLAlchemy part of the app instance
-# app.config['SQLALCHEMY_ECHO'] = True
-# app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////' + os.path.join(basedir, 'users.db')
-# app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-#
 
 
-# db = SQLAlchemy(app)
-#
-# # Initialize Marshmallow
-# ma = Marshmallow(app)
-#
-# class users(db.Model):
-#     _id = db.Column("id", db.Integer, primary_key=True)
-#     text = db.Column(db.String(100))
-#
-#     def __init__(self, text):
-#         self.text = text
 
 
+
+
+@flask_app.route("/")
+def get():
+    print("REDIRECTING")
+    # return "ok"
+    return redirect('/static/')
 
 
 
@@ -50,10 +34,7 @@ app = Api(app=flask_app,
           version="1.0",
           title="VIA app",
           description="Covid app for via",
-          doc='/documentation',
-          base_url="/static/")
-
-
+          doc='/documentation')
 
 
 
@@ -68,25 +49,14 @@ internal_name_space = app.namespace("internal", description='internal api about 
 app_name_space = app.namespace("", description='rendering page')
 
 
-def fillDatabase(db:SQLAlchemy, msgs):
-    for m in msgs:
-        usr = users(m)
-        db.session.add(usr)
-    db.session.commit()
-    print(users.query.all())
 
 
-# fillDatabase(db,user_messages)
-
-@app_name_space.route("/static/")
-# @app.route("/static/")
+@app.route("/static/")
 class PageController(Resource):
     @app.doc(responses={200: 'OK', 400: 'Invalid Argument'}, description="Render the page")
     def get(self):
         headers = {'Content-Type': 'text/html'}
         return Response(response=render_template('index.html'))
-        # return make_response(render_template('index.html'), 200, headers)
-        # return render_template('index.html')
 
 
 
@@ -235,3 +205,48 @@ def get_external_covid_countries():
 # db.create_all()
 flask_app.run()
 # app.run(host="0.0.0.0", debug=True)
+
+
+
+
+# basedir = os.path.abspath(os.path.dirname(__file__))
+# # Create the Connexion application instance
+# connex_app = connexion.App(__name__, specification_dir=basedir)
+#
+# # Get the underlying Flask app instance
+# app = connex_app.app
+#
+# flask_app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.sqlite3'
+# flask_app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+#
+# # Configure the SQLAlchemy part of the app instance
+# app.config['SQLALCHEMY_ECHO'] = True
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////' + os.path.join(basedir, 'users.db')
+# app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+#
+
+
+# db = SQLAlchemy(app)
+#
+# # Initialize Marshmallow
+# ma = Marshmallow(app)
+#
+# class users(db.Model):
+#     _id = db.Column("id", db.Integer, primary_key=True)
+#     text = db.Column(db.String(100))
+#
+#     def __init__(self, text):
+#         self.text = text
+
+
+
+
+# def fillDatabase(db:SQLAlchemy, msgs):
+#     for m in msgs:
+#         usr = users(m)
+#         db.session.add(usr)
+#     db.session.commit()
+#     print(users.query.all())
+
+
+# fillDatabase(db,user_messages)

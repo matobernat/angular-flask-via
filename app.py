@@ -58,7 +58,7 @@ class PageController(Resource):
         headers = {'Content-Type': 'text/html'}
         return Response(response=render_template('index.html'))
 
-
+# web: gunicorn --bind 0.0.0.0:$PORT app:app
 
 print("BOL SOM TU ALE ASI NIC")
 

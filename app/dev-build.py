@@ -19,8 +19,8 @@ for directory in directories:
         print("ANGULAR PATH: ", ANGULAR_PROJECT_PATH)
         print("DIST PATH: ", DIST_PATH)
 
-FLASK_STATIC_PATH = os.path.join(CURRENT_DIRECTORY, 'static')
-FLASK_TEMPLATES_PATH = os.path.join(CURRENT_DIRECTORY, 'templates')
+FLASK_STATIC_PATH = os.path.join(CURRENT_DIRECTORY, '../static')
+FLASK_TEMPLATES_PATH = os.path.join(CURRENT_DIRECTORY, '../templates')
 
 print(" BUILD COMMAND 0 START : ", 'cd ' + ANGULAR_PROJECT_PATH + ' && ng build --watch --base-href /static/ &')
 

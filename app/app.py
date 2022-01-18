@@ -13,8 +13,7 @@ from werkzeug.utils import redirect
 """Define Flask app"""
 flask_app = Flask(__name__, static_folder='static', static_url_path="/static")
 
-flask_app.wsgi_app = ProxyFix(flask_app.wsgi_app)
-
+# flask_app.wsgi_app = ProxyFix(flask_app.wsgi_app)
 
 
 
@@ -200,8 +199,8 @@ def get_external_covid_countries():
     return response.json()
 
 
-if __name__ == '__main__':
-    flask_app.run()
+# if __name__ == '__main__':
+#     flask_app.run()
 
 # db.create_all()
 # flask_app.run()

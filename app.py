@@ -71,7 +71,7 @@ class CountryData(Resource):
             return covid_name_space.abort(400, status="input format should be [STATE,DATE] ", statusCode="400")
         country,date = countrywithdate.split(',')
         print("input: " + country+", "+ date)
-        print(type(get_external_covid_history_by_country()))
+        # print(type(get_external_covid_history_by_country()))
         return get_external_covid_history_by_country(country,date)
         # return (jsonify(get_external_covid_history_by_country(country,date)), 200);
 
@@ -89,9 +89,9 @@ class CountryData(Resource):
 class Countries(Resource):
     @app.doc(responses={200: 'OK', 400: 'Invalid Argument'}, description="Get all available countries")
     def get(self):
-        print("callling endpoint countries")
+        print("calling endpoint countries")
         print(type(get_external_covid_countries()))
-        print(get_external_covid_countries())
+        # print(get_external_covid_countries())
         return get_external_covid_countries()
         # return (jsonify(get_external_covid_countries()), 200)
 
@@ -109,7 +109,7 @@ class Countries(Resource):
 class Time(Resource):
     @app.doc(responses={200: 'OK', 400: 'Invalid Argument'}, description="Get current time")
     def get(self):
-        print(get_external_time())
+        # print(get_external_time())
         return get_external_time()
         # return (jsonify(get_external_time()), 200)
 
@@ -119,7 +119,7 @@ class Time(Resource):
 class getMessages(Resource):
     @app.doc(responses={200: 'OK', 400: 'Invalid Argument'}, description="Get all the messages from users")
     def get(self):
-        print(user_messages)
+        # print(user_messages)
         return user_messages
         # return jsonify(user_tips)
         # return (jsonify(user_tips), 200)
@@ -132,7 +132,7 @@ class deleteMessages(Resource):
         print(user_messages)
         temp = user_messages.copy()
         user_messages.clear()
-        print(user_messages)
+        # print(user_messages)
         return temp
         # return jsonify(user_tips)
         # return (jsonify(user_tips), 200)
@@ -142,7 +142,7 @@ class deleteMessages(Resource):
 class insertMessages(Resource):
     @app.doc(responses={200: 'OK', 400: 'Invalid Argument'}, description="Insert message")
     def put(self,message):
-        print(message)
+        # print(message)
         user_messages.append(message)
         # msg = messages(message)
         # db.session.add(msg)
@@ -165,9 +165,9 @@ def get_external_time():
 
     response = requests.request("GET", url, headers=headers)
 
-    print("\nPRINTING DAteE\n")
-    print(response.text)
-    print("\nPRINTING DAtE\n")
+    # print("\nPRINTING DAteE\n")
+    # print(response.text)
+    # print("\nPRINTING DAtE\n")
     return response.json()
 
 def get_external_covid_history_by_country(country="usa", day="2020-06-02"):
@@ -182,7 +182,7 @@ def get_external_covid_history_by_country(country="usa", day="2020-06-02"):
     }
 
     response = requests.request("GET", url, headers=headers, params=querystring)
-    print(response.text)
+    # print(response.text)
     return  response.json()
 
 
@@ -200,7 +200,8 @@ def get_external_covid_countries():
     return response.json()
 
 
-
+if __name__ == '__main__':
+    flask_app.run()
 
 # db.create_all()
 flask_app.run()
